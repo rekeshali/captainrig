@@ -6,7 +6,7 @@ from phrases import *
 from rigreboot import rebootHighwind, rebootTrailblazer, bootHighwind, bootTrailblazer
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
-def is(keyword,name,text):
+def iskey(keyword,name,text):
     return name in text.lower() and keyword in text.lower()
 
 class MyClient(discord.Client):
