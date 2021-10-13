@@ -25,13 +25,13 @@ class MyClient(discord.Client):
         # Automatic actions
         if message.author.name == 'Hive Bot':
             # Turn off booting flag when online
-            if is('online','highwind',text):
+            if iskey('online','highwind',text):
                 self.booting_high = False
-            elif is('online','trailblazer',text):
+            elif iskey('online','trailblazer',text):
                 self.booting_trail = False
            
             # Makereboot decisions if turned offline
-            elif is('offline','highwind',text):
+            elif iskey('offline','highwind',text):
                 if self.booting_high: # User initiated
                     return
                 else:
@@ -42,7 +42,7 @@ class MyClient(discord.Client):
                         logging.info('Rebooting highwind.')
                         rebootHighwind(10)
 
-            elif is('offline','trailblazer',text):
+            elif iskey('offline','trailblazer',text):
                 if self.booting_trail: # User initiated
                     return
                 else:
@@ -53,15 +53,15 @@ class MyClient(discord.Client):
                         logging.info('Rebooting trailblazer.')
                         rebootTrailblazer(10)
 
-            elif is('offline','chariot',text):
+            elif iskey('offline','chariot',text):
                 await message.channel.send(auto_chariot)
-            elif is('offline','orphan',text):
+            elif iskey('offline','orphan',text):
                 await message.channel.send(auto_orphan)
 
         # User actions
         else:
 
-            if is('reboot','highwind',text):
+            if iskey('reboot','highwind',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_highwind)
                 else:
@@ -69,7 +69,7 @@ class MyClient(discord.Client):
                 logging.info('Rebooting Highwind.')
                 self.booting_high = True
                 rebootHighwind(10)
-            elif is('boot','highwind',text):
+            elif iskey('boot','highwind',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_highwind)
                 else:
@@ -77,7 +77,7 @@ class MyClient(discord.Client):
                 logging.info('Booting Highwind.')
                 bootHighwind()
 
-            elif is('reboot','trailblazer',text):
+            elif iskey('reboot','trailblazer',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_trailblazer)
                 else:
@@ -85,7 +85,7 @@ class MyClient(discord.Client):
                 logging.info('Rebooting Trailblazer.')
                 self.booting_trail = True
                 rebootTrailblazer(10)
-            elif is('boot','trailblazer',text):
+            elif iskey('boot','trailblazer',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_trailblazer)
                 else:
@@ -93,9 +93,9 @@ class MyClient(discord.Client):
                 logging.info('Booting Trailblazer.')
                 bootTrailblazer()
             
-            elif is('reboot','chariot',text):
+            elif iskey('reboot','chariot',text):
                 await message.channel.send(any_chariot)
-            elif is('reboot','orphan',text):
+            elif iskey('reboot','orphan',text):
                 await message.channel.send(any_orphan)
 
 with open('token') as f:
