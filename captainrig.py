@@ -36,7 +36,7 @@ class MyClient(discord.Client):
                     return
                 else:
                     self.booting_high = True # Assume Hive initiated
-                    await asyncio.sleep(300) # Wait to see if Hive has it covered
+                    await asyncio.sleep(600) # Wait to see if Hive has it covered
                     if self.booting_high: # Hive did not get to it
                         await message.channel.send(auto_highwind)
                         logging.info('Rebooting highwind.')
@@ -47,7 +47,7 @@ class MyClient(discord.Client):
                     return
                 else:
                     self.booting_trail = True # Assume Hive initiated
-                    await asyncio.sleep(300) # Wait to see if Hive has it covered
+                    await asyncio.sleep(600) # Wait to see if Hive has it covered
                     if self.booting_trail: # Hive did not get to it
                         await message.channel.send(auto_trailblazer)
                         logging.info('Rebooting trailblazer.')
