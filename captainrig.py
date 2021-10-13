@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import discord
 import logging
+from phrases import *
 from rigreboot import rebootHighwind, rebootTrailblazer, bootHighwind, bootTrailblazer
 
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
