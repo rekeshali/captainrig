@@ -1,19 +1,17 @@
 #!/usr/bin/python3
+import asyncio
 import discord
 import logging
 from phrases import *
 from rigreboot import rebootHighwind, rebootTrailblazer, bootHighwind, bootTrailblazer
+logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
 def is(keyword,name,text):
     return name in text.lower() and keyword in text.lower()
 
-
-
-logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
-high, trail = False, False
 class MyClient(discord.Client):
-    high = False
-    trail = False
+    booting_high = False
+    booting_trail = False
     async def on_ready(self):
         logging.info('Logged on as %s.'%self.user)
 
@@ -23,28 +21,41 @@ class MyClient(discord.Client):
             return
         text = message.content
         logging.info('%s: %s'%(message.author.name,text))
+        
         # Automatic actions
         if message.author.name == 'Hive Bot':
+            # Turn off booting flag when online
+            if is('online','highwind',text):
+                self.booting_high = False
+            elif is('online','trailblazer',text):
+                self.booting_trail = False
            
-            if is('offline','highwind',text):
-                if self.high:
-                    self.high = False
+            # Makereboot decisions if turned offline
+            elif is('offline','highwind',text):
+                if self.booting_high: # User initiated
                     return
-                await message.channel.send(auto_highwind)
-                logging.info('Rebooting highwind.')
-                rebootHighwind(10)
+                else:
+                    self.booting_high = True # Assume Hive initiated
+                    await asyncio.sleep(300) # Wait to see if Hive has it covered
+                    if self.booting_high: # Hive did not get to it
+                        await message.channel.send(auto_highwind)
+                        logging.info('Rebooting highwind.')
+                        rebootHighwind(10)
 
-            if is('offline','trailblazer',text):
-                if self.trail:
-                    self.trail = False
+            elif is('offline','trailblazer',text):
+                if self.booting_trail: # User initiated
                     return
-                await message.channel.send(auto_trailblazer)
-                logging.info('Rebooting Trailblazer.')
-                rebootTrailblazer(10)
+                else:
+                    self.booting_trail = True # Assume Hive initiated
+                    await asyncio.sleep(300) # Wait to see if Hive has it covered
+                    if self.booting_trail: # Hive did not get to it
+                        await message.channel.send(auto_trailblazer)
+                        logging.info('Rebooting trailblazer.')
+                        rebootTrailblazer(10)
 
-            if is('offline','chariot',text):
+            elif is('offline','chariot',text):
                 await message.channel.send(auto_chariot)
-            if is('offline','orphan',text):
+            elif is('offline','orphan',text):
                 await message.channel.send(auto_orphan)
 
         # User actions
@@ -56,9 +67,9 @@ class MyClient(discord.Client):
                 else:
                     await message.channel.send(grunt_highwind)
                 logging.info('Rebooting Highwind.')
-                self.high = True
+                self.booting_high = True
                 rebootHighwind(10)
-            elif 'highwind' in text.lower() and 'boot' in text.lower():
+            elif is('boot','highwind',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_highwind)
                 else:
@@ -66,16 +77,15 @@ class MyClient(discord.Client):
                 logging.info('Booting Highwind.')
                 bootHighwind()
 
-            if 'trailblazer' in text.lower() and 'reboot' in text.lower():
+            elif is('reboot','trailblazer',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_trailblazer)
                 else:
                     await message.channel.send(grunt_trailblazer)
                 logging.info('Rebooting Trailblazer.')
-                self.trail = True
+                self.booting_trail = True
                 rebootTrailblazer(10)
-
-            elif 'trailblazer' in text.lower() and 'boot' in text.lower():
+            elif is('boot','trailblazer',text):
                 if message.author.name == 'redeye':
                     await message.channel.send(master_trailblazer)
                 else:
@@ -83,10 +93,10 @@ class MyClient(discord.Client):
                 logging.info('Booting Trailblazer.')
                 bootTrailblazer()
             
-            if 'chariot' in text.lower() and 'reboot' in text.lower():
+            elif is('reboot','chariot',text):
                 await message.channel.send(any_chariot)
-            if 'orphan' in text.lower() and 'reboot' in text.lower():
-                await message.channel.send(any_chariot)
+            elif is('reboot','orphan',text):
+                await message.channel.send(any_orphan)
 
 with open('token') as f:
     token = f.readline()
