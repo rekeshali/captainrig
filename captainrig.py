@@ -24,14 +24,14 @@ class MyClient(discord.Client):
                     return
                 await message.channel.send('Blimey! Highwind full sail lads!')
                 logging.info('Rebooting highwind.')
-                rebootHighwind(5)
+                rebootHighwind(10)
             elif 'trailblazer' in text.lower() and 'offline' in text.lower():
                 if self.trail:
                     self.trail = False
                     return
                 await message.channel.send('Scurvy dog! Trailblazer full speed ahead matey!')
                 logging.info('Rebooting Trailblazer.')
-                rebootTrailblazer(5)
+                rebootTrailblazer(10)
             elif 'chariot' in text.lower() and 'offline' in text.lower():
                 await message.channel.send('Despicable! Chariot be damned!')
             elif 'orphan' in text.lower() and 'offline' in text.lower():
@@ -44,7 +44,7 @@ class MyClient(discord.Client):
                     await message.channel.send("Watch yer tongue ye wench! I'll have it fer stew! Ye herd'im lads...")
                 logging.info('Rebooting Highwind.')
                 self.high = True
-                rebootHighwind(5)
+                rebootHighwind(10)
             elif 'highwind' in text.lower() and 'boot' in text.lower():
                 if message.author.name == 'redeye':
                     await message.channel.send('Why yes master! As you command! Highwind full sail, put yer back into it lads!')
@@ -59,7 +59,7 @@ class MyClient(discord.Client):
                     await message.channel.send("May Davy Jones claim ye wretched soul! Make haste lads...")
                 logging.info('Rebooting Trailblazer.')
                 self.trail = True
-                rebootTrailblazer(5)
+                rebootTrailblazer(10)
             elif 'trailblazer' in text.lower() and 'boot' in text.lower():
                 if message.author.name == 'redeye':
                     await message.channel.send('Oh senpai! I am not worthy of your gaze! Trailblazer full speed ahead, drop the sails ye scalliwags!')
@@ -72,6 +72,9 @@ class MyClient(discord.Client):
             if 'orphan' in text.lower() and 'reboot' in text.lower():
                 await message.channel.send("Ye landlubbers will hange the jib or I'll hang'em from the Yardam!")
 
+with open('token') as f:
+    token = f.readline()
+
 client = MyClient()
-client.run('ODkyMTg4NjY1MDg4OTk1MzI4.YVJRcQ.bu6_Va-GLbyodDW-1EC-aBrDlok')
+client.run(token)
 
