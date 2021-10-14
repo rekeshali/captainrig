@@ -20,7 +20,9 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
         text = message.content
-        logging.info('%s: %s'%(message.author.name,text))
+        
+        if 'factory' in message.channel.name:
+            logging.info('%s: %s'%(message.author.name,text))
         
         # Automatic actions
         if message.author.name == 'Hive Bot':
